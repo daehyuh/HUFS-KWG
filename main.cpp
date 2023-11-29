@@ -298,7 +298,4 @@ window.display();
 }
 return 0;
 }
-
-//살려줘...
-
 //g++ -std=c++11 -fdiagnostics-color=always -g main.cpp  -I/opt/homebrew/Cellar/sfml/2.6.1/include -L/opt/homebrew/Cellar/sfml/2.6.1/lib -lsfml-window -lsfml-system -lsfml-graphics
