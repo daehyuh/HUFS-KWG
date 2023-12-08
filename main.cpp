@@ -16,9 +16,19 @@ int fastLevel = 0;
 int status = 0;
 
 sf::Font font;
+
 sf::Texture texture;
 sf::Texture testTexture;
 
+
+sf::Texture texture2;
+sf::Texture testTexture2;
+
+sf::Texture texture3;
+sf::Texture testTexture3;
+
+sf::Texture texture4;
+sf::Texture testTexture4;
 
 class Boo{
     public:
@@ -42,16 +52,28 @@ class Boo{
             this->posY = posY;
             this->money = money;
             cout<<this->uid << this->level <<endl;
-            this->sprite.setTexture(texture);
-            this->sprite.setPosition(this->posX, this->posY);
-            this->sprite.setScale(0.5, 0.5);
+
+            if (this->level <= 4) {
+                this->sprite.setTexture(texture);
+                text.setString("undergraduate"+to_string(this->level));
+            } else if (this->level <= 6){
+                this->sprite.setTexture(texture2);
+                text.setString("master"+to_string(this->level-4));
+            } else if (this->level <= 8){
+                this->sprite.setTexture(texture3);
+                text.setString("doctor"+to_string(this->level-6));
+            } else {
+                this->sprite.setTexture(texture4);
+                text.setString("professor"+to_string(this->level-8));
+            }
             
             text.setFont(font);
             text.setCharacterSize(20);
             text.setFillColor(Color::White);
             text.setOutlineThickness(2);
             text.setPosition(this->posX+25, this->posY-25);
-            text.setString("Lv."+to_string(this->level));
+            this->sprite.setPosition(this->posX, this->posY);
+            this->sprite.setScale(0.5, 0.5);
 
         }
         
@@ -88,8 +110,8 @@ class Boo{
             if (this->sprite.getPosition().x < 0) {
                 this->sprite.setPosition(0, this->sprite.getPosition().y);
             }
-            if (this->sprite.getPosition().x > 500) {
-                this->sprite.setPosition(500, this->sprite.getPosition().y);
+            if (this->sprite.getPosition().x > 900) {
+                this->sprite.setPosition(900, this->sprite.getPosition().y);
             }
             //y축
             if (this->sprite.getPosition().y < 80) {
@@ -110,7 +132,7 @@ return 42; // Robust error handling!
 }
 
 //게임창 크기
-int nX = 600;
+int nX = 1000;
 int nY = 800;
 
 // uuid
@@ -132,23 +154,34 @@ sf::Time timeToDisplay = sf::seconds(3.0f);
 RenderWindow window(VideoMode(nX, nY), "Boo Grow Game", sf::Style::Titlebar | sf::Style::Close);
 window.setFramerateLimit(240);
 
+
 //텍스쳐 관리
-texture.loadFromFile("./image/image.png");
+//학부생
+texture.loadFromFile("./image/boo.png");
 texture.setSmooth(true);
+//대학원생
+texture2.loadFromFile("./image/boo2.png");
+texture2.setSmooth(true);
+//박사생
+texture3.loadFromFile("./image/boo3.png");
+texture3.setSmooth(true);
+//교수
+texture4.loadFromFile("./image/boo4.png");
+texture4.setSmooth(true);
 
 //상단바
-sf::RectangleShape topbar(sf::Vector2f(600.0f, 100.0f));
+sf::RectangleShape topbar(sf::Vector2f(1000.0f, 100.0f));
     topbar.setFillColor(sf::Color(236, 150, 68));
     topbar.setPosition(0.0f, 0.0f);
 //하단바
-sf::RectangleShape bottombar(sf::Vector2f(600.0f, 100.0f));
+sf::RectangleShape bottombar(sf::Vector2f(1000.0f, 100.0f));
     bottombar.setFillColor(sf::Color(236, 150, 68));
     bottombar.setPosition(0.0f, 700.0f);
 // 배경
 sf::Texture bg;
-bg.loadFromFile("./image/bg.png");
+bg.loadFromFile("./image/bg2.png");
 sf::Sprite background(bg);
-background.setScale(1, 1);
+background.setScale(0.3, 0.3);
 background.setPosition(0, 80);
 
 sf::Texture bg2;
@@ -249,8 +282,6 @@ background2.setPosition(0, 80);
         button10.setFillColor(sf::Color::Cyan);
         button10.setPosition(300.0f, 400.0f);
 
-
-
 Text text;
 text.setFont(font);
 text.setString(to_string(money) + " won" + " " + to_string(time_passed) + " sec");
@@ -311,18 +342,12 @@ if (Mouse::isButtonPressed(Mouse::Left)) {
                 window.draw(boos[i].sprite);
                 window.draw(boos[i].text);
                 window.draw(text);
-                window.draw(button);
-                window.draw(button2);
-                window.draw(button3);
-                window.draw(button4);
-                window.draw(button5);
+            
                 window.draw(button6);
-                window.draw(buttonText);
-                window.draw(button2Text);
-                window.draw(button3Text);
-                window.draw(button4Text);
-                window.draw(button5Text);
                 window.draw(button6Text);
+                window.draw(button);
+                window.draw(buttonText);
+
                 window.display();
                 // 합치기 출력 end
         }
@@ -369,10 +394,10 @@ if (e.type == sf::Event::MouseButtonPressed) {
             }
 
             //화면 밖으로 빠져나오지 않게 범위안에 랜덤 생성
-            int randx = rand() % 500;
+            int randx = rand() % 1000;
             int randy = rand() % 500;
-            if (randx > 500) {
-                randx = 500;
+            if (randx > 1000) {
+                randx = 900;
             } else if (randx < 100) {
                 randx = 100;
             }
@@ -421,7 +446,7 @@ if (e.type == sf::Event::MouseButtonPressed) {
         } else {
             (status = 0);
             button6Text.setString("goto test");
-        }   
+        }
     } else if (button7.getGlobalBounds().contains(mousePos)) {
         
     } else if (button8.getGlobalBounds().contains(mousePos)) {
@@ -442,7 +467,7 @@ end:;
 time(&time_end);
 for (Boo boo : boos) {
     if (time_passed != time_end - time_start){
-        money += (boo.money + (50 * studyLevel)) * (1 + (0.0025 * doubleLevel));
+        money += (boo.money + (50 * studyLevel)) * (1 + (0.025 * doubleLevel));
     }
 }
 time_passed = time_end - time_start;
@@ -454,7 +479,6 @@ window.clear();
 window.draw(topbar);
 window.draw(background);
 window.draw(bottombar);
-
 for (Boo boo : boos) {
     boo.checkPosition();
     window.draw(boo.sprite);
@@ -463,16 +487,8 @@ for (Boo boo : boos) {
 
 window.draw(text);
 window.draw(button);
-window.draw(button2);
-window.draw(button3);
-window.draw(button4);
-window.draw(button5);
-window.draw(button6);
 window.draw(buttonText);
-window.draw(button2Text);
-window.draw(button3Text);
-window.draw(button4Text);
-window.draw(button5Text);
+window.draw(button6);
 window.draw(button6Text);
 // 화면을 표시한다. 
 window.display();
@@ -481,16 +497,23 @@ window.display();
 } else if (status == 1) {
     window.clear();
     window.draw(topbar);
-    window.draw(background2);
+    window.draw(background);
     window.draw(bottombar);
     window.draw(button6);
 
-    window.draw(button7);
-    window.draw(button8);
-    window.draw(button9);
-    window.draw(button10);
-    window.draw(button6Text);
     window.draw(text);
+    
+    window.draw(button2);
+    window.draw(button3);
+    window.draw(button4);
+    window.draw(button5);
+    window.draw(button6);
+    window.draw(button2Text);
+    window.draw(button3Text);
+    window.draw(button4Text);
+    window.draw(button5Text);
+    window.draw(button6Text);
+
     window.display();
 }
 
